@@ -65,8 +65,12 @@ void *run_pong(void *_ignore) {
         read_val = atomic_load_explicit(&ping_pong_lines_b.value_read, memory_order_relaxed);
         uint64_t end = rdtscp();
         assert(read_val == i+1);
-        mfence();
-        mfence();
+
+        // stall for some unpredictable time so the predictor can't learn
+        int rounds = (rand() * end) % 10;
+        for (int i = 0; i < rounds; i++) {
+            mfence();
+        }
 
         // ignore some loops to allow cpus to get to max frequency
         if (end >= start && (i >= MAX_SEND/2)) {

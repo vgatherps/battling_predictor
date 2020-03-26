@@ -67,7 +67,7 @@ void *run_pong(void *_ignore) {
         assert(read_val == i+1);
 
         // stall for some unpredictable time so the predictor can't learn
-        int rounds = (rand() * end) % 10;
+        int rounds = ((unsigned)rand() * end) % 10;
         for (int i = 0; i < rounds; i++) {
             mfence();
         }
